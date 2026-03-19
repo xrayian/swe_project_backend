@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { CreateProfileDto, ProfileDto } from './dto/profile.dto';
-import { NotFoundError } from 'rxjs';
 
 @Injectable()
 export class ProfileService {
@@ -73,17 +72,18 @@ export class ProfileService {
         return newProfile; // Return the newly created profile
     }
 
-    updateProfile(id: string, profileData: Partial<CreateProfileDto>): ProfileDto {
-        const profileIndex = this.profiles.findIndex(p => p.id === id);
-        if (profileIndex === -1) {
-            throw new Error('Profile not found');
-        }
-        const updatedProfile = {
+    updateProfile(profileIndex: number, profileData: Partial<CreateProfileDto>): ProfileDto {
+        // Ignore undefined fields so they do not clear existing values.
+        const updates = Object.fromEntries(
+            Object.entries(profileData).filter(([, value]) => value !== undefined)
+        );
+
+        this.profiles[profileIndex] = {
             ...this.profiles[profileIndex],
-            ...profileData,
+            ...updates,
             updatedAt: new Date()
         };
-        this.profiles[profileIndex] = updatedProfile;
+
         return this.profiles[profileIndex]; // Return the updated profile
     }
 }

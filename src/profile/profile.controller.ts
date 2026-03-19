@@ -6,6 +6,7 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -23,7 +24,7 @@ export class ProfileController {
   }
 
   @Get('/:id')
-  getProfileById(@Param('id') id: string): object {
+  getProfileById(@Param('id', new ParseUUIDPipe()) id: string): object {
     const profile = this.profileService.getProfileById(id);
     if (!profile) {
       throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
@@ -33,14 +34,21 @@ export class ProfileController {
 
   @Post('/create')
   createProfile(@Body() profileData: CreateProfileDto): object {
+    
     return this.profileService.createProfile(profileData);
   }
 
   @Put('/:id')
   updateProfile(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() profileData: UpdateProfileDto,
   ): object {
-    return this.profileService.updateProfile(id, profileData);
+    const profileIndex = this.profileService
+      .getProfiles()
+      .findIndex((p) => p.id === id);
+    if (profileIndex === -1) {
+      throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
+    }
+    return this.profileService.updateProfile(profileIndex, profileData);
   }
 }
