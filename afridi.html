@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contribution Banner</title>
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0d1117;
+    }
+
+    .banner {
+        width: 100%;
+        height: 200px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0d1117, #161b22);
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .banner h1 {
+        font-size: 40px;
+        margin: 0;
+        z-index: 2;
+    }
+
+    .banner p {
+        margin: 5px 0 0;
+        font-size: 18px;
+        color: #8b949e;
+    }
+
+    /* contribution dots */
+    .dots {
+        position: absolute;
+        display: grid;
+        grid-template-columns: repeat(20, 10px);
+        gap: 5px;
+        opacity: 0.3;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        background: #2ea043;
+        border-radius: 2px;
+        animation: pulse 2s infinite alternate;
+    }
+
+    @keyframes pulse {
+        from { opacity: 0.2; }
+        to { opacity: 1; }
+    }
+</style>
+</head>
+<body>
+
+<div class="banner">
+    <div class="dots">
+        <!-- generate multiple dots -->
+        <script>
+            for(let i=0;i<200;i++){
+                document.write('<div class="dot"></div>');
+            }
+        </script>
+    </div>
+
+    <div>
+        <h1>My Contributions</h1>
+        <p>Consistency • Growth • Code Everyday</p>
+    </div>
+</div>
+
+</body>
+</html>
