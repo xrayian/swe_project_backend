@@ -1,0 +1,35 @@
+name: Bouncer Protocol 🛑
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  inspect-commits:
+    name: Interrogate Pushed Commits
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch depth 2 is required so we can compare the latest commit to its parent
+          fetch-depth: 2 
+
+      - name: Check for Empty Commits
+        run: |
+          echo "🔍 Scanning the latest commit for actual, tangible effort..."
+          
+          # 'git diff-tree --quiet HEAD' checks if the tree is identical to its parent
+          if git diff-tree --quiet HEAD; then
+            echo "::error title=Empty Commit Detected::🛑 [SYSTEM OVERRIDE: PIPELINE HALTED] 🛑"
+            echo "Wow. An empty commit made it to the remote server. Truly groundbreaking work."
+            echo "Are we trying to artificially inflate our GitHub contribution graph, or did we just forget how to save files?"
+            echo "The Handylink repository requires actual code to function. Please write some code and push again."
+            echo "Status: Disappointed, but not surprised."
+            exit 1
+          else
+            echo "✅ File changes detected. The commit actually contains something. Proceeding..."
+          fi
